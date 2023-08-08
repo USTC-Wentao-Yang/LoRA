@@ -75,6 +75,7 @@ class Embedding(nn.Embedding, LoRALayer):
                 self.merged = True
         
     def forward(self, x: torch.Tensor):
+        # don't understand
         if self.r > 0 and not self.merged:
             result = nn.Embedding.forward(self, x)
             after_A = F.embedding(
@@ -120,6 +121,8 @@ class Linear(nn.Linear, LoRALayer):
         nn.Linear.reset_parameters(self)
         if hasattr(self, 'lora_A'):
             # initialize A the same way as the default for nn.Linear and B to zero
+            # "kaiming_uniform_"是具体的初始化方法，它是一种基于Kaiming He的初始权重分布的
+            # 方法，该方法通过在[-1,1]之间均匀分布初始权重来帮助优化神经网络的训练。这种方法有助于加速训练并提高模型性能。
             nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
             nn.init.zeros_(self.lora_B)
 
